@@ -1,13 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const userRouter = require("./modules/users/users.routes");
+const authRouter = require("./modules/auth/auth.routes");
 
-router.get("/", (req, res) => {
-  res.status(200).json({
-    message: "Welcome to the API",
-  });
-});
-
-// Add more routes here, e.g.:
-// router.use("/users", userRouter);
+router.use("/users", userRouter);
+router.use("/auth", authRouter);
 
 module.exports = router;

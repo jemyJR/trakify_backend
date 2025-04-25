@@ -2,7 +2,7 @@ const { app } = require("./app");
 
 const { dbConnect } = require("./shared/config/dbConnect");
 const mongoose = require("mongoose");
-const logger = require("./utils/logger");
+const logger = require("./shared/utils/logger");
 
 const DEFAULT_PORT = 3000;
 const PORT = process.env.PORT || DEFAULT_PORT;
