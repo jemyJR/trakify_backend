@@ -66,7 +66,6 @@ exports.changePassword = async function (userId, oldPassword, newPassword) {
   const hashedPassword = await bcrypt.hash(newPassword, salt);
   user.password = hashedPassword;
   await user.save();
-  await logoutAllDevices(userId);
   logger.info(`Password changed successfully for user with ID: ${userId}`);
   return "Password changed successfully";
 };
