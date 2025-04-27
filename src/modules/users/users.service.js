@@ -26,11 +26,6 @@ exports.updateUser = async function (userId, userData, uploadedImage) {
   if (email) updateFields.email = email;
 
   if (uploadedImage) {
-    const user = await User.findById(userId);
-    if (user?.image) {
-      await deletePreviousFile(user.image);
-    }
-
     updateFields.image = uploadedImage._id;
   }
 
