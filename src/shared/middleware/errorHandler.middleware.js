@@ -19,7 +19,7 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       return acc;
     }, {});
 
-    options = { errors };
+    options = { details: errors };
 
     logger.warn(err, {
       ...logMetadata,
@@ -52,13 +52,12 @@ const errorHandlerMiddleware = (err, req, res, next) => {
     message = "Duplicate key error";
     const field = Object.keys(err.keyValue)[0];
     const value = err.keyValue[field];
-    options = {
-      conflict: {
-        field,
-        value,
-        message: `The ${field} '${value}' is already in use`,
-      },
+    const conflict = {
+      field,
+      value,
+      message: `The ${field} '${value}' is already in use`,
     };
+    options = { conflict };
 
     logger.warn(err, {
       ...logMetadata,
@@ -93,6 +92,17 @@ const errorHandlerMiddleware = (err, req, res, next) => {
       errorMessage: err.message,
       stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
     });
+  }
+
+  // Override message with the first detail if available
+  if (options?.details && typeof options.details === "object") {
+    const firstKey = Object.keys(options.details)[0];
+    message = options.details[firstKey];
+  } else if (options?.errors && typeof options.errors === "object") {
+    const firstKey = Object.keys(options.errors)[0];
+    message = options.errors[firstKey];
+  } else if (options?.conflict && options.conflict.message) {
+    message = options.conflict.message;
   }
 
   // Construct error response
